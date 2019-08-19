@@ -1,0 +1,273 @@
+<template>
+  <div class="online">
+    <header-box :title="title"></header-box>
+    <div class="tabs">
+      <ul class="tab-menu" @mousedown="down" @touchstart="down" @touchmove="move">
+        <li :class="{current: item.checked}" v-for="(item, index) in tabList" :key="item.title" @click="tabClick(index)">
+          {{item.title}}
+        </li>
+      </ul>
+      <div class="tab-line"></div>
+    </div>
+    <div class="online-container" style="padding: 0 .3rem;">
+      <ul class="online-menu">
+        <li v-for="item in onlineList" :key="item.CourseID">
+          <img :src="'https://img.xlxt.net' + item.Img" alt="">
+          <p>{{item.Name}}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+<script>
+import HeaderBox from '@/components/Header'
+import { shopArticle } from '@/api/index'
+export default {
+  name: 'online',
+  data () {
+    return {
+      title: '线上管理赋能课程专区',
+      tabList: [
+        {
+          title: '店长/储备店长',
+          checked: true
+        },
+        {
+          title: '运营经理',
+          checked: false
+        },
+        {
+          title: 'HR',
+          checked: false
+        },
+        {
+          title: '采购/商品经理',
+          checked: false
+        },
+        {
+          title: '热点',
+          checked: false
+        }
+      ],
+      onlineList: [
+        {
+          img: require('./../../common/images/w1.jpg'),
+          title: '大娃火辣直播'
+        },
+        {
+          img: require('./../../common/images/w2.jpg'),
+          title: '二娃劲爆直播'
+        },
+        {
+          img: require('./../../common/images/w3.jpg'),
+          title: '三娃妩媚直播'
+        },
+        {
+          img: require('./../../common/images/w2.jpg'),
+          title: '四娃妖艳直播'
+        },
+        {
+          img: require('./../../common/images/w5.jpg'),
+          title: '五娃柔情直播'
+        },
+        {
+          img: require('./../../common/images/w6.jpg'),
+          title: '六娃吃货直播'
+        },
+        {
+          img: require('./../../common/images/w7.jpg'),
+          title: '七娃游戏直播'
+        },
+        {
+          img: require('./../../common/images/avatar.jpg'),
+          title: '小新卖萌直播'
+        }
+      ],
+      // 鼠标按下
+      flags: false,
+      startX: 0,
+      moveX: 0,
+      lineX: 0
+    }
+  },
+  mounted () {
+    let menu = document.querySelector('.tab-menu')
+    let list = menu.querySelectorAll('li')
+    let width = 0
+    let l = 0
+    let md = list[1].offsetLeft - list[0].offsetWidth - list[0].offsetLeft
+    list.forEach(item => {
+      width += item.clientWidth
+      // console.log(width)
+    })
+    let line = document.querySelector('.tab-line')
+    line.style.transform = `translate(${list[0].offsetWidth / 2 - 15}px)`
+    menu.style.width = width + md * 4 + 5 + 'px'
+    this._shopArticle()
+  },
+  methods: {
+    tabClick (index) {
+      this.tabList.forEach((item,zindex) => {
+        if (zindex === index) {
+          item.checked = true
+          let l = document.querySelectorAll('.tab-menu li')[0].offsetLeft
+          let ll = document.querySelector('.tabs').offsetLeft
+          let tabItem = document.querySelectorAll('.tab-menu li')[index]
+          let w = tabItem.offsetWidth
+          let line = document.querySelector('.tab-line')
+          let domW = document.documentElement.offsetWidth
+          let patentBox = document.querySelector('.tab-menu')
+          let toLeft = 0
+          if (patentBox.clientWidth > domW) {
+            if (index > 1) {
+              console.log(l)
+              patentBox.style.transform = `translateX(-${patentBox.clientWidth - domW + ll}px)`
+              //  patentBox.style.height = '1000px'
+              toLeft = (patentBox.clientWidth - domW) * -1 
+
+              console.log(toLeft)
+            } else {
+              toLeft = 0
+              patentBox.style.transform = `translateX(0px)`
+            }
+          }
+          if (line.offsetWidth > w) {
+            line.style.width = w + 'px'
+            line.style.transform = `translateX(${tabItem.offsetLeft + toLeft - ll}px)`
+          } else {
+            line.style.width = '.6rem'
+            if (index < 2) {
+              line.style.transform = `translateX(${tabItem.offsetLeft + w/2 - line.offsetWidth/2 + toLeft}px)`
+              this.lineX = tabItem.offsetLeft + w/2 - line.offsetWidth/2 + toLeft
+            } else {
+              console.log(ll)
+              line.style.transform = `translateX(${tabItem.offsetLeft - ll + w/2 - line.offsetWidth/2 + toLeft}px)`
+              this.lineX = tabItem.offsetLeft - ll + w/2 - line.offsetWidth/2 + toLeft
+            }
+          }
+        } else {
+          item.checked = false
+        }
+      })
+    },
+    down (e) {
+      this.flags = true
+      var touch;
+      if(e.touches){
+          touch = e.touches[0];
+      }else {
+          touch = e;
+      }
+      this.startX = touch.clientX
+    },
+    move (e) {
+      // if (this.flags) {
+      //   var touch;
+      //   let move = 0
+      //   if(e.touches){
+      //       touch = e.touches[0];
+      //   }else {
+      //       touch = e;
+      //   }
+      //   move = touch.clientX - this.startX
+      //   let menu = document.querySelector('.tab-menu')
+      //   if (move > 10) {
+      //     console.log('you')
+      //   }
+      //   if (move < -10) {
+      //     console.log('z')
+      //   }
+      //   menu.style.transform = `translateX(${move}px)`
+      //   console.log(move)
+      //   // console.log(touch.clientX, this.startX)
+      // }
+    },
+    async _shopArticle () {
+      let result = await shopArticle({
+        newest:false,
+        browseNum:false,
+        reviewAvg:false,
+        courseClassify:511,
+        pagesize:9,
+        pageindex:1,
+        keyword: ''
+      })
+      this.onlineList = result.Data
+      console.log(result)
+    }
+  },
+  components: {
+    HeaderBox
+  }
+}
+</script>
+<style lang="less" scoped>
+.online {
+  width: 100vw;
+  overflow: hidden;
+}
+.tabs {
+  width: calc(~"100vw - 0.3rem");
+  margin-left: .3rem;
+  margin-bottom: .3rem;
+  box-sizing: border-box;
+  // overflow: hidden;
+  position: relative;
+  .tab-menu {
+    width: 500rem;
+    display: flex;
+    transition: .5s;
+    li {
+      margin-right: .3rem;
+      font-size: .3rem .42rem;
+      color: #999;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    .current {
+      color: #222;
+    }
+  }
+  .tab-line {
+    margin-top: .13rem;
+    width: .6rem;
+    height: .04rem;
+    background-color: #000;
+    border-radius: .08rem;
+    border:1px solid rgba(151,151,151,1);
+    transition: .2s;
+    position: absolute;
+    left: 0;
+    bottom: -.2rem;
+  }
+}
+.online-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  li {
+    width: 3.3rem;
+    height: 4rem;
+    border-radius: .2rem;
+    box-shadow:0 .02rem .2rem 0 rgba(0,0,0,0.06);
+    margin-bottom: .3rem;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 3.31rem;
+    }
+    p {
+      text-align: center;
+      font-size: .3rem;
+      color:rgba(34,34,34,1);
+      line-height: .42rem;
+      font-weight: bold;
+      line-height: .7rem;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+</style>
