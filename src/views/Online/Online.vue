@@ -87,7 +87,8 @@ export default {
       flags: false,
       startX: 0,
       moveX: 0,
-      lineX: 0
+      lineX: 0,
+      tabs: 0
     }
   },
   mounted () {
@@ -107,6 +108,7 @@ export default {
   },
   methods: {
     tabClick (index) {
+      this.tabs = index
       this.tabList.forEach((item,zindex) => {
         if (zindex === index) {
           item.checked = true
@@ -124,8 +126,6 @@ export default {
               patentBox.style.transform = `translateX(-${patentBox.clientWidth - domW + ll}px)`
               //  patentBox.style.height = '1000px'
               toLeft = (patentBox.clientWidth - domW) * -1 
-
-              console.log(toLeft)
             } else {
               toLeft = 0
               patentBox.style.transform = `translateX(0px)`
@@ -140,7 +140,6 @@ export default {
               line.style.transform = `translateX(${tabItem.offsetLeft + w/2 - line.offsetWidth/2 + toLeft}px)`
               this.lineX = tabItem.offsetLeft + w/2 - line.offsetWidth/2 + toLeft
             } else {
-              console.log(ll)
               line.style.transform = `translateX(${tabItem.offsetLeft - ll + w/2 - line.offsetWidth/2 + toLeft}px)`
               this.lineX = tabItem.offsetLeft - ll + w/2 - line.offsetWidth/2 + toLeft
             }
@@ -182,18 +181,32 @@ export default {
       //   // console.log(touch.clientX, this.startX)
       // }
     },
-    async _shopArticle () {
+    async _shopArticle (id) {
       let result = await shopArticle({
         newest:false,
         browseNum:false,
         reviewAvg:false,
-        courseClassify:511,
+        courseClassify:id,
         pagesize:9,
         pageindex:1,
         keyword: ''
       })
       this.onlineList = result.Data
-      console.log(result)
+    },
+  },
+  watch: {
+    tabs (val) {
+      if (val === 0) {
+        this._shopArticle(511)
+      } else if (val === 1) {
+        this._shopArticle(515)
+      } else if (val === 2) {
+        this._shopArticle(513)
+      } else if (val === 3) {
+        this._shopArticle(514)
+      } else {
+        this._shopArticle(515)
+      }
     }
   },
   components: {
