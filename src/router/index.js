@@ -53,6 +53,11 @@ export default new Router({
       path: '/select',
       name: 'sel',
       component: () => import('@/views/Select/Select.vue')
+    },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: () => import('@/views/Demo.vue')
     }
   ]
 })

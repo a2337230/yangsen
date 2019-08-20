@@ -25,7 +25,8 @@ export default {
 
       } else if (url === '/leader' || url === '/online' || url === '/offline' || url === '/resale' || url === '/study' || url === '/trade') {
         this.$router.push('/tengfei')
-      } else if (url === '/offarcitle') {
+      } 
+      if (url.includes('/offarcitle')) {
         this.$router.push('/offline')
       }
     }

@@ -18,3 +18,4 @@ export const shopArticle = (params) => ajax(BASE_URL + '/Course/GetCourseShow', 
 export const ArticleInfo1 = (params) => ajax(BASE_URL + '/Article/GetArticleByID', params)
 // 获取文章详情无权限
 export const ArticleInfo2 = (params) => ajax(BASE_URL + '/Article/GetArticleByIDShow', params)
+export const GetInfoByID = (params) => ajax(BASE_URL + '/Marketing/GetInfoByID', params)

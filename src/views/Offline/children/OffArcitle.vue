@@ -7,13 +7,13 @@
         <i class="video-btn"></i>
       </div>
       <div class="arcitle-content">
-        <h1>我不是药神</h1>
+        <h1>{{ArcitleTitle}}</h1>
         <p class="arcitle-info">
           <span>杏林学堂</span>
-          <span>浏览量：68978</span>
-          <span>时间： 2018-07-20</span>
+          <span>浏览量：{{Hit}}</span>
+          <span>时间： {{time | dateFormat}}</span>
         </p>
-        <div class="content">
+        <div class="content" v-html="content">
           我们都对“生病”有着与生俱来的恐惧，这种恐惧都是源于对“活着”的一种本能态度。《我不是药神》中那个白血病大妈握着警察的手说：哪一家多多少少会有病人啊。这无疑是一种对病患的最无力的摊牌。《我不是药神》有一种力量，这种力量在于医药与患者不能互成的矛盾上，在于现实给予求生欲的一记猛棍上，也在于法律与人情的互文上。<br/><br/>前段时间，一直被头晕所困扰，我妈非要让我去医院看看，于是挂了个号，做了个CT，然后被确诊为作息不规律而导致的脑供血不足。离开医院时，我跟我妈说我是有多久没来医院看过病了。紧接着，我妈立刻拉下脸，抄起手里的CT片子就往我脑袋上打，全然忘了我头晕的症状，调高了分贝，恶狠狠地怒斥我说：你真脑子坏了啊，好好地来医院遭什么罪。
         </div>
         <footer class="footer">
@@ -39,6 +39,7 @@
 import HeaderBox from '@/components/Header'
 import { ArticleInfo1, ArticleInfo2 } from '@/api/index'
 import util from '@/utils/util.js'
+import moment from 'moment'
 export default {
   name: 'OffArcitle',
   data () {
@@ -48,7 +49,11 @@ export default {
       user: '',
       psd: '',
       isShow: false,
-      arcitleID: this.$route.query.arcitleID
+      arcitleID: this.$route.query.arcitleID,
+      content: '',
+      ArcitleTitle: '',
+      Hit: 0,
+      time: ''
     }
   },
   mounted () {
@@ -75,10 +80,8 @@ export default {
     getArt () {
       console.log(this.user)
       if (this.user) {
-        alert(1)
         this.getArcitle1()
       } else {
-        alert(2)
         this.getArcitle2()
       }
     },
@@ -86,13 +89,27 @@ export default {
       let result = await ArticleInfo1({
         articleid: this.arcitleID
       })
-      console.log(result)
+      this.ArcitleTitle = result.Data.Title
+      this.content = result.Data.Content
+      this.Hit = result.Data.Hits
+      this.time = result.Data.AddTime
+      this.isLike = result.Data.IsLike
     },
     async getArcitle2 () {
       let result = await ArticleInfo2({
         articleid: this.arcitleID
       })
-      console.log(result)
+      this.ArcitleTitle = result.Data.Title
+      this.content = result.Data.Content
+      this.Hit = result.Data.Hits
+      this.time = result.Data.AddTime
+      this.isLike = result.Data.IsLike
+    }
+  },
+  filters: {
+    dateFormat (val) {
+      let time = val.substring(6, val.length - 2)
+      return moment(Number(time)).format('YYYY-MM-DD')
     }
   },
   components: {

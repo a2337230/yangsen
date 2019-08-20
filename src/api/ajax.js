@@ -11,10 +11,10 @@ export default function ajax (url = '', params = {}, type = 'GET') {
       // 'u': '6d965efe4cb09a048967739d6fd16a29',
 
       // // 拜耳企业
-      // 'k': 'b74509f2ec63d2ba1fbc403aafa9db79',// zhuan ji
-      // 'u': 'ce714749e1d85959d9c3ccc710183f3b',
-       'u':util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u'),
-       'k':util.getCookie('token') ? util.getCookie('token'): util.getCookie('k'), 
+      'k': 'bb04d055-9b7b-4da6-9895-66965efb4d13',// zhuan ji
+      'u': 'bd8063c7-4323-4a9a-9a20-b7dd48772983',
+      //  'u':util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u'),
+      //  'k':util.getCookie('token') ? util.getCookie('token'): util.getCookie('k'), 
        'Content-Type': 'application/json'
     }
     if (type === 'GET') {
