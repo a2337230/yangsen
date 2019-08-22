@@ -1,6 +1,6 @@
 <template>
   <ul class="prop-menu">
-    <li class="prop-list" v-for="item in prople" :key="item.name">
+    <li class="prop-list" v-for="(item, index) in prople" :key="item.name" @click="goLeader(index)">
       <div class="avatar">
         <img :src="item.avatar" alt="">
       </div>
@@ -22,6 +22,17 @@ export default {
       type: Array,
       default: () => { return [] }
     }
+  },
+  methods: {
+    goLeader (index) {
+      this.$router.push({
+        path: '/leaderInfo',
+        query: {
+          id: index,
+          path: this.prople.length === 3 ? 'tengfei' : 'leader'
+        }
+      })
+    }
   }
 }
 </script>
@@ -29,7 +40,7 @@ export default {
 .prop-menu {
   .prop-list {
     height: 1.68rem;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid #d2d2d2;
     display: flex;
     align-items: center;
     position: relative;
@@ -57,6 +68,7 @@ export default {
         margin-bottom: .08rem;
       }
       span {
+        color: #444;
         font-weight: normal;
       }
     }

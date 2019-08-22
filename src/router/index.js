@@ -55,9 +55,9 @@ export default new Router({
       component: () => import('@/views/Select/Select.vue')
     },
     {
-      path: '/demo',
-      name: 'demo',
-      component: () => import('@/views/Demo.vue')
-    }
+      path: '/leaderInfo',
+      name: '人物介绍',
+      component: () => import('@/components/LeaderInfo.vue')
+    },
   ]
 })

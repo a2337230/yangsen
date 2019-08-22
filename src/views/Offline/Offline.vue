@@ -5,7 +5,7 @@
       <ul class="off-menu" v-if="offList.length > 0">
         <li v-for="item in offList" :key="item.time" @click="goArcitle(item.ArticleID)">
           <img :src="item.PreviewUrl.includes('ArticleManage') ? 'https://img.xlxt.net/' + item.PreviewUrl : defaultImg" alt="">
-          <p>{{item.Title}} <span>{{item.AddTime | timeFormat}}</span></p>
+          <p>{{item.Title | titleFormat}} <span>{{item.AddTime | timeFormat}}</span></p>
         </li>
       </ul>
     </div>
@@ -35,7 +35,8 @@ export default {
       this.$router.push({
         path: '/offarcitle',
         query: {
-          arcitleID
+          arcitleID,
+          path: 'offline'
         }
       })
     },
@@ -48,6 +49,12 @@ export default {
     timeFormat (val) {
       let time = val.substring(6, val.length - 2)
       return moment(Number(time)).format('YYYY-MM-DD')
+    },
+    titleFormat (val) {
+      if (val.length > 15) {
+        return val.substring(0, 15) + '...'
+      }
+      return val
     }
   },
   components: {

@@ -11,8 +11,8 @@ export default function ajax (url = '', params = {}, type = 'GET') {
       // 'u': '6d965efe4cb09a048967739d6fd16a29',
 
       // // 拜耳企业
-      'k': 'bb04d055-9b7b-4da6-9895-66965efb4d13',// zhuan ji
-      'u': 'bd8063c7-4323-4a9a-9a20-b7dd48772983',
+      'k': '2d001adc288acf01f432a157ec482dc7',// zhuan ji
+      'u': 'e58510f6b68148c721a76f82e6008c0f',
       //  'u':util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u'),
       //  'k':util.getCookie('token') ? util.getCookie('token'): util.getCookie('k'), 
        'Content-Type': 'application/json'

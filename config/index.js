@@ -25,7 +25,13 @@ module.exports = {
 				target: 'https://ossnew.xlxt.net',
 				secure: false,
 				changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-			}
+      },
+      '/Review/*': {
+				target: 'https://www.xlxt.net',
+				secure: false,
+				changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+      }
+      
     },
 
     // Various Dev Server settings

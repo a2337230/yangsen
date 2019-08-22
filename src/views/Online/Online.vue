@@ -11,11 +11,19 @@
     </div>
     <div class="online-container" style="padding: 0 .3rem;">
       <ul class="online-menu">
-        <li v-for="item in onlineList" :key="item.CourseID">
+        <li v-for="item in onlineList" :key="item.CourseID" @click="goCourse(item)">
           <img :src="'https://img.xlxt.net' + item.Img" alt="">
           <p>{{item.Name}}</p>
         </li>
       </ul>
+    </div>
+    <div class="psd-dialog" v-if="isDialog">
+      <div class="psd-box">
+        <i class="close" @click="outBack"></i>
+        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd">
+        <p class="dialog" :class="{isShow: isShow}">密码错误</p>
+        <button class="submit-btn" @click="submitPsd">确定</button>
+      </div>
     </div>
   </div>
 </template>
@@ -88,7 +96,11 @@ export default {
       startX: 0,
       moveX: 0,
       lineX: 0,
-      tabs: 0
+      tabs: 0,
+      isDialog: false,
+      isShow: false,
+      lookId: 0,
+      psd: ''
     }
   },
   mounted () {
@@ -99,12 +111,11 @@ export default {
     let md = list[1].offsetLeft - list[0].offsetWidth - list[0].offsetLeft
     list.forEach(item => {
       width += item.clientWidth
-      // console.log(width)
     })
     let line = document.querySelector('.tab-line')
     line.style.transform = `translate(${list[0].offsetWidth / 2 - 15}px)`
     menu.style.width = width + md * 4 + 5 + 'px'
-    this._shopArticle()
+    this._shopArticle(511)
   },
   methods: {
     tabClick (index) {
@@ -122,7 +133,6 @@ export default {
           let toLeft = 0
           if (patentBox.clientWidth > domW) {
             if (index > 1) {
-              console.log(l)
               patentBox.style.transform = `translateX(-${patentBox.clientWidth - domW + ll}px)`
               //  patentBox.style.height = '1000px'
               toLeft = (patentBox.clientWidth - domW) * -1 
@@ -181,6 +191,17 @@ export default {
       //   // console.log(touch.clientX, this.startX)
       // }
     },
+    goCourse (val) {
+      this.lookId = val.CourseID
+      let psd = localStorage.getItem('isPsd')
+      // console.log(psd)
+      if (psd) {
+        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+      } else {
+        this.pasTop()
+      }
+      // this.pasTop()
+    },
     async _shopArticle (id) {
       let result = await shopArticle({
         newest:false,
@@ -193,6 +214,26 @@ export default {
       })
       this.onlineList = result.Data
     },
+    pasTop () {
+      this.isDialog = true
+      setTimeout(() => {
+        let psd = document.querySelector('.psd-box')
+        psd.classList.add('psdTop')
+      }, 200)
+    },
+    submitPsd () {
+      if (this.psd.toLocaleLowerCase() === 'tfzx') {
+        localStorage.setItem('isPsd', '1')
+        this.isDialog = false
+        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+        // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
+      } else {
+        this.isShow = true
+      }
+    },
+    outBack () {
+      this.isDialog = false
+    }
   },
   watch: {
     tabs (val) {
@@ -281,6 +322,74 @@ export default {
       text-overflow:ellipsis;
       white-space: nowrap;
     }
+  }
+}
+.psd-dialog {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .psd-box {
+    transform: translateY(500px);
+    width: 6rem;
+    height: 4.8rem;
+    background-color: #fff;
+    border-radius: .2rem;
+    position: relative;
+    transition: .2s cubic-bezier(.3,-0.03,.57,1.32);
+    .close {
+      position: absolute;
+      right: 0;
+      width: 1rem;
+      height: 1rem;
+      background: url('./../../common/images/close.png') no-repeat center center;
+      background-size: .34rem .34rem;
+    }
+    .psd-input {
+      width: 2.8rem;
+      display: block;
+      margin: 1.73rem auto 0rem;
+      border: 0;
+      text-align: center;
+      font-size: .4rem;
+      line-height: .56rem;
+      padding-bottom: .05rem;
+      border-bottom: 1px solid #999;
+    }
+    .submit-btn {
+      display: block;
+      margin: 0 auto;
+      width: 4rem;
+      height: .68rem;
+      background-color: #2F54EB;
+      border-radius: .34rem;
+      text-align: center;
+      font-size: .4rem;
+      line-height: .68rem;
+      color: #fff;
+    }
+  }
+  .psdTop {
+    transform: translateY(0)
+  }
+  .dialog {
+    width: 2.8rem;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.90rem;
+    padding-top: .1rem;
+    font-size: .3rem;
+    color: red;
+    opacity: 0;
+  }
+  .isShow {
+    opacity: 1;
   }
 }
 </style>

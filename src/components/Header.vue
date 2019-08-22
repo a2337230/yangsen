@@ -17,17 +17,20 @@ export default {
       default: '活动介绍'
     }
   },
+  mounted () {
+    document.title = this.title
+  },
   methods: {
     goBack () {
-      console.log(this.$route.fullPath)
       let url = this.$route.fullPath
       if (url === '/tengfei') {
 
       } else if (url === '/leader' || url === '/online' || url === '/offline' || url === '/resale' || url === '/study' || url === '/trade') {
         this.$router.push('/tengfei')
       } 
-      if (url.includes('/offarcitle')) {
-        this.$router.push('/offline')
+      if (url.includes('&path=')) {
+        let arcUrl = '/' + url.split('&path=')[1]
+        this.$router.push(arcUrl)
       }
     }
   }
@@ -41,7 +44,7 @@ export default {
   text-align: center;
   line-height: .88rem;
   font-size: .36rem;
-  font-weight: 500;
+  font-weight: 700;
   background-color: #fff;
   // font-family: 'pingfang sc';
   .back {

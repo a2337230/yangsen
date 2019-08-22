@@ -29,3 +29,10 @@ input::-webkit-input-placeholder {
 .pd30 {
   padding: 0 .3rem;
 }
+.leader-content .content p {
+  color: #222;
+  font-size: .36rem;
+  line-height: .5rem;
+  /* text-indent: 2em; */
+  margin-bottom: .5rem;
+}

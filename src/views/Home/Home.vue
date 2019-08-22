@@ -22,7 +22,7 @@
       </router-link>
     </ul>
     <!-- 视频导航图片 -->
-    <div class="go-video">
+    <div class="go-video" @click="goVideo">
       <img src="./../../common/images/homeAd.png" alt="">
     </div>
     <!-- 领军人物 -->
@@ -35,56 +35,45 @@
         <h2 class="home-title">线上管理赋能课程专区 <router-link tag="span" to="/online">更多</router-link></h2>
         <p>县城TOP客户专享</p>
         <ul class="per-card">
-          <li>
-            <img src="./../../common/images/banner01.jpg" alt="">
-            <p>直播直播1111</p>
+          <li @click="goTop(723)">
+            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/5/24/73d3a95978ca4cbc9aae524611121235.jpg" alt="">
+            <p>呼吸系统疾病-咳嗽</p>
           </li>
-          <li>
-            <img src="./../../common/images/banner02.jpg" alt="">
-            <p>直播直播1111</p>
+          <li @click="goTop(2593)">
+            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/5/16/1f7250fc7149483ebd8a020a543cd9bf.jpg" alt="">
+            <p>温湿度表记录</p>
           </li>
-          <li>
-            <img src="./../../common/images/banner03.jpg" alt="">
-            <p>直播直播1111</p>
+          <li @click="goTop(2679)">
+            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/5/29/f001019018ba4de1981f139b05a16b54.jpg" alt="">
+            <p>店面形象与清洁</p>
           </li>
-          <li>
-            <img src="./../../common/images/banner04.jpg" alt="">
-            <p>直播直播1111</p>
+          <li @click="goTop(2674)">
+            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/7/12/3d51ebf058d3496c8c21a818cc710254.jpg" alt="">
+            <p>中药区铡刀操作</p>
           </li>
         </ul>
       </div>
       <div class="person pd30" style="padding-bottom: 0">
         <h2 class="home-title">线下赋能巡讲会集锦 <router-link tag="span" to="/offline">更多</router-link></h2>
         <ul class="patrol-menu">
-          <li class="patrol-list isimg">
-            <img src="./../../common/images/banner03.jpg" alt="">
-            <p>泉源堂<span>2019-08-08</span></p>
-          </li>
-          <li class="patrol-list">
-            <img src="./../../common/images/banner03.jpg" alt="">
-            <p>聊城五州<span>2019-08-08</span></p>
+          <li class="patrol-list isimg" v-for="item in offArr" :key="item.ArticleID" @click="goOffArcitle(item.ArticleID)">
+            <div class="prtrol-img">
+              <img :src="'https://img.xlxt.net' + item.PreviewUrl" alt="">
+            </div>
+            <p>{{item.Title | titleFormat}}<span>{{item.AddTime | timeFormat}}</span></p>
           </li>
         </ul>
       </div>
       <div class="person pd30" style="padding-bottom: .38rem">
         <h2 class="home-title">零售峰会点亮行动 <router-link tag="span" to="/resale">更多</router-link></h2>
         <ul class="retail-menu">
-          <li class="retail-list">
+          <li class="retail-list" v-for="item in resaleArr" :key="item.ArticleID" @click="goResaleArcitle(item.ArticleID)">
             <div class="img-left">
-              <img src="./../../common/images/banner04.jpg" alt="">
+              <img :src="'https://img.xlxt.net' + item.PreviewUrl" alt="">
             </div>
             <div class="right-des">
-              <h3>文章标题</h3>
-              <p>圣诞节萨拉丁阿迪达斯可点击撒旦教撒角度看撒剪短发的说法女星穿女明星农村V型曹</p>
-            </div>
-          </li>
-          <li class="retail-list">
-            <div class="img-left">
-              <img src="./../../common/images/banner04.jpg" alt="">
-            </div>
-            <div class="right-des">
-              <h3>文章标题</h3>
-              <p>圣诞节萨拉丁阿迪达斯可点击撒旦教撒角度看撒剪短发的说法女星穿女明星农村V型曹</p>
+              <h3>{{item.Title}}</h3>
+              <p>{{item.Intro | resTitleFormat}}</p>
             </div>
           </li>
         </ul>
@@ -104,12 +93,25 @@
         </ul>
       </div>
     </div>
+    <video-box v-if="isVideo" @cliseVideo="cliseVideo"></video-box>
+    <div class="psd-dialog" v-if="isDialog">
+      <div class="psd-box">
+        <i class="close" @click="outBack"></i>
+        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd">
+        <p class="dialog" :class="{isShow: isShow}">密码错误</p>
+        <button class="submit-btn" @click="submitPsd">确定</button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import HeaderBox from '@/components/Header'
 import Swiper from '@/components/Swiper'
 import PropList from '@/components/PropList'
+import VideoBox from '@/components/Video'
+import { offArticle, retailArticle } from '@/api/index'
+import prople from './../../common/JS/prople'
+import moment from 'moment'
 export default {
   name: 'Home',
   data () {
@@ -132,32 +134,127 @@ export default {
         }
       ],
       // 人物数据
-      popList: [
-        {
-          avatar: require('./../../common/images/avatar.jpg'),
-          name: '蜡笔小新',
-          des: '野原新之助',
-          path: ''
-        },
-        {
-          avatar: require('./../../common/images/avatar1.jpg'),
-          name: '课长广志',
-          des: '野原广志',
-          path: ''
-        },
-        {
-          avatar: require('./../../common/images/avatar2.jpg'),
-          name: '家庭主妇美伢',
-          des: '野原美伢',
-          path: ''
+      popList: [],
+      offArr: [],
+      resaleArr: [],
+      isVideo: false,
+      isDialog: false,
+      isShow: false,
+      lookId: 0,
+      psd: ''
+    }
+  },
+  created () {
+    let popData = prople.prople()
+    popData.length = 3
+    this.popList = popData
+    window.scrollTo(0,0)
+  },
+  mounted() {
+    this.offArc()
+    this.resaleArc()
+  },
+  methods: {
+    // 线下
+    async offArc () {
+      let result = await offArticle ()
+      let data = result.Data
+      if (data.length > 2) {
+        data.length = 2
+      }
+      this.offArr = data
+    },
+    // 零售
+    async resaleArc () {
+      let result = await retailArticle()
+      let data = result.Data
+      data.length = 2
+      this.resaleArr = data
+    },
+
+    goVideo () {
+      this.isVideo = true
+    },
+    cliseVideo () {
+      this.isVideo = false
+    },
+    goOffArcitle (arcitleID) {
+      this.$router.push({
+        path: '/offarcitle',
+        query: {
+          arcitleID,
+          type: 'off',
+          path: 'tengfei'
         }
-      ]
+      })
+    },
+    goResaleArcitle (arcitleID) {
+      this.$router.push({
+        path: '/offarcitle',
+        query: {
+          arcitleID,
+          type: 'off',
+          source: 'resale',
+          path: 'tengfei'
+        }
+      })
+    },
+    goTop (id) {
+      this.lookId = id
+      let psd = localStorage.getItem('isPsd')
+      console.log(psd)
+      if (psd) {
+        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+      } else {
+        this.pasTop()
+      }
+      
+      // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${id}&returnUrl=${window.location.href}`
+    },
+    pasTop () {
+      this.isDialog = true
+      setTimeout(() => {
+        let psd = document.querySelector('.psd-box')
+        psd.classList.add('psdTop')
+      }, 200)
+    },
+    submitPsd () {
+      if (this.psd.toLocaleLowerCase() === 'tfzx') {
+        localStorage.setItem('isPsd', '1')
+        this.isDialog = false
+        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+        // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
+      } else {
+        this.isShow = true
+      }
+    },
+    outBack () {
+      this.isDialog = false
+    }
+  },
+  filters: {
+    timeFormat (val) {
+      let time = val.substring(6, val.length - 2)
+      return moment(Number(time)).format('YYYY-MM-DD')
+    },
+    titleFormat (val) {
+      if (val.length > 15) {
+        return val.substring(0, 15) + '...'
+      }
+      return val
+    },
+    resTitleFormat (val) {
+      if (val.length > 35) {
+        return val.substring(0, 35) + '...'
+      }
+      return val
     }
   },
   components: {
     HeaderBox,
     Swiper,
-    PropList
+    PropList,
+    VideoBox
   }
 }
 </script>
@@ -222,9 +319,15 @@ export default {
     }
     .patrol-menu {
       padding-top: .3rem;
-      img {
+      .prtrol-img {
         width: 100%;
         height: 2rem;
+        overflow: hidden;
+      }
+      img {
+        width: 100%;
+        // height: 2rem;
+        height: auto;
         border-radius: .2rem;
       }
       p {
@@ -312,4 +415,72 @@ export default {
 //     height: inherit !important;
 //   }
 // }
+.psd-dialog {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .psd-box {
+    transform: translateY(500px);
+    width: 6rem;
+    height: 4.8rem;
+    background-color: #fff;
+    border-radius: .2rem;
+    position: relative;
+    transition: .2s cubic-bezier(.3,-0.03,.57,1.32);
+    .close {
+      position: absolute;
+      right: 0;
+      width: 1rem;
+      height: 1rem;
+      background: url('./../../common/images/close.png') no-repeat center center;
+      background-size: .34rem .34rem;
+    }
+    .psd-input {
+      width: 2.8rem;
+      display: block;
+      margin: 1.73rem auto 0rem;
+      border: 0;
+      text-align: center;
+      font-size: .4rem;
+      line-height: .56rem;
+      padding-bottom: .05rem;
+      border-bottom: 1px solid #999;
+    }
+    .submit-btn {
+      display: block;
+      margin: 0 auto;
+      width: 4rem;
+      height: .68rem;
+      background-color: #2F54EB;
+      border-radius: .34rem;
+      text-align: center;
+      font-size: .4rem;
+      line-height: .68rem;
+      color: #fff;
+    }
+  }
+  .psdTop {
+    transform: translateY(0)
+  }
+  .dialog {
+    width: 2.8rem;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.90rem;
+    padding-top: .1rem;
+    font-size: .3rem;
+    color: red;
+    opacity: 0;
+  }
+  .isShow {
+    opacity: 1;
+  }
+}
 </style>

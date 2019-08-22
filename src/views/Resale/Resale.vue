@@ -3,13 +3,13 @@
     <header-box :title="title"></header-box>
     <div class="res-container">
       <ul class="retail-menu">
-        <li class="retail-list" v-for="(item,index) in resaleData" :key="index">
+        <li class="retail-list" v-for="(item,index) in resaleData" :key="index" @click="goArcitle(item.ArticleID)">
           <div class="img-left">
-            <img :src="item.img" alt="">
+            <img :src="'https://img.xlxt.net' + item.PreviewUrl" alt="">
           </div>
-          <div class="right-des">
-            <h3>{{item.title}}</h3>
-            <p>{{item.des}}</p>
+          <div class="right-des"> 
+            <h3>{{item.Title}}</h3>
+            <p>{{item.Intro | desFormat}}</p>
           </div>
         </li>
       </ul>
@@ -24,48 +24,7 @@ export default {
   data () {
     return {
       title: '零售峰会点亮行动',
-      resaleData: [
-        {
-          img: require('./../../common/images/banner01.jpg'),
-          title: '九月九日忆山东兄弟',
-          des: '独在异乡为异客，每逢佳节倍思亲。遥知兄弟登高处，遍插茱萸少一人。 '
-        },
-        {
-          img: require('./../../common/images/banner02.jpg'),
-          title: '黄鹤楼送孟浩然之广陵',
-          des: '故人西辞黄鹤楼，烟花三月下扬州。孤帆远影碧空尽，唯见长江天际流。 '
-        },
-        {
-          img: require('./../../common/images/banner03.jpg'),
-          title: '早发白帝城',
-          des: '朝辞白帝彩云间，千里江陵一日还。两岸猿声啼不住，轻舟已过万重山。'
-        },
-        {
-          img: require('./../../common/images/banner04.jpg'),
-          title: '乌衣巷',
-          des: '朱雀桥边野草花，乌衣巷口夕阳斜。 旧时王谢堂前燕，飞入寻常百姓家。'
-        },
-        {
-          img: require('./../../common/images/banner01.jpg'),
-          title: '九月九日忆山东兄弟',
-          des: '独在异乡为异客，每逢佳节倍思亲。遥知兄弟登高处，遍插茱萸少一人。 '
-        },
-        {
-          img: require('./../../common/images/banner02.jpg'),
-          title: '黄鹤楼送孟浩然之广陵',
-          des: '故人西辞黄鹤楼，烟花三月下扬州。孤帆远影碧空尽，唯见长江天际流。 '
-        },
-        {
-          img: require('./../../common/images/banner03.jpg'),
-          title: '早发白帝城',
-          des: '朝辞白帝彩云间，千里江陵一日还。两岸猿声啼不住，轻舟已过万重山。'
-        },
-        {
-          img: require('./../../common/images/banner04.jpg'),
-          title: '乌衣巷',
-          des: '朱雀桥边野草花，乌衣巷口夕阳斜。 旧时王谢堂前燕，飞入寻常百姓家。'
-        }
-      ]
+      resaleData: []
     }
   },
   created () {
@@ -74,7 +33,27 @@ export default {
   methods: {
     async _resaleArticle () {
       let result = await retailArticle()
-      console.log(result)
+      console.log(result.Data)
+      this.resaleData = result.Data
+      console.log(this.resaleData)
+    },
+    goArcitle (arcitleID) {
+      this.$router.push({
+        path: '/offarcitle',
+        query: {
+          arcitleID,
+          path: 'resale'
+
+        }
+      })
+    }
+  },
+  filters: {
+    desFormat (val) {
+      if (val.length > 25) {
+        return val.substring(0, 25) + '...'
+      }
+      return val
     }
   },
   components: {
