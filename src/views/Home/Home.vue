@@ -112,6 +112,8 @@ import VideoBox from '@/components/Video'
 import { offArticle, retailArticle } from '@/api/index'
 import prople from './../../common/JS/prople'
 import moment from 'moment'
+import util from '@/utils/util.js'
+import { MessageBox } from 'mint-ui';
 export default {
   name: 'Home',
   data () {
@@ -141,7 +143,8 @@ export default {
       isDialog: false,
       isShow: false,
       lookId: 0,
-      psd: ''
+      psd: '',
+      user: ''
     }
   },
   created () {
@@ -149,6 +152,8 @@ export default {
     popData.length = 3
     this.popList = popData
     window.scrollTo(0,0)
+    this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
+    // this.user = '2d001adc288acf01f432a157ec482dc7'
   },
   mounted() {
     this.offArc()
@@ -202,10 +207,24 @@ export default {
       })
     },
     goTop (id) {
+      if (!this.user) {
+        MessageBox({
+          title: '提示',
+          message: '登录后可以观看课程',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '登陆'
+        }).then(action => {
+          if (action === 'confirm') {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          }
+        })
+        return 
+      }
       this.lookId = id
       let psd = localStorage.getItem('isPsd')
       if (psd) {
-        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?from=index&product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
       } else {
         this.pasTop()
       }
@@ -222,7 +241,7 @@ export default {
       if (this.psd.toLocaleLowerCase() === 'tfzx') {
         localStorage.setItem('isPsd', '1')
         this.isDialog = false
-        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?from=index&product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
         // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
       } else {
         this.isShow = true
@@ -328,7 +347,7 @@ export default {
       img {
         width: 100%;
         // height: 2rem;
-        height: auto;
+        // height: auto;
         border-radius: .2rem;
       }
       p {

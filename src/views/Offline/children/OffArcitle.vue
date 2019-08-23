@@ -26,11 +26,11 @@
       <button class="submit" v-show="isInput" @click.stop="submitFrom">发送</button>
       <ul class="domain" v-show="!isInput">
         <li class="domain-item dis-num" @click="submitLike">
-          <span class="dis-amount">{{likeNum}}</span>
+          <span class="dis-amount" v-if="user">{{likeNum}}</span>
           <img :src="isZan ? yesZan : noZan" alt="">
         </li>
         <li class="domain-item dis-num" @click="onDialog">
-          <span class="dis-amount">
+          <span class="dis-amount" v-if="user">
             {{reviewCount}}
           </span>
           <img src="./../../../common/images/pinglun.png" alt="">
@@ -246,8 +246,8 @@ export default {
       }, 200)
     }
     
-    // this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
-    this.user = '2d001adc288acf01f432a157ec482dc7'
+    this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
+    // this.user = '2d001adc288acf01f432a157ec482dc7'
     // this.isHref = this.BaseUrl +  `/articleInfo?id=${this.id}&hit=${this.hit}&share`
     this.isHref = window.location.href
     this._iosInput()
@@ -747,7 +747,7 @@ export default {
 }
 .container {
   // margin-top: .88rem;
-  padding: 0.88rem .3rem 1.3rem;
+  padding: 0rem .3rem 1.3rem;
   height: calc(~"100% - 1.98rem");
   box-sizing: border-box;
   .arcitle-video {
@@ -781,7 +781,7 @@ export default {
   .article-title {
     font-size: .5rem;
     line-height: .58rem;
-    padding-top: .5rem;
+    padding-top: .2rem;
   }
   .article-hit {
     text-align: right;

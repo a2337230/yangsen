@@ -31,7 +31,7 @@
 import HeaderBox from '@/components/Header'
 import { shopArticle } from '@/api/index'
 import util from '@/utils/util.js'
-import { MessageBox } from 'mint-ui';
+import { MessageBox } from 'mint-ui'
 export default {
   name: 'online',
   data () {
@@ -174,7 +174,7 @@ export default {
           confirmButtonText: '登陆'
         }).then(action => {
           if (action === 'confirm') {
-            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + this.isHref
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
           }
         })
         return 
@@ -212,7 +212,7 @@ export default {
       if (this.psd.toLocaleLowerCase() === 'tfzx') {
         localStorage.setItem('isPsd', '1')
         this.isDialog = false
-        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?from=index&product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
         // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
       } else {
         this.isShow = true

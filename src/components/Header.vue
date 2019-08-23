@@ -65,6 +65,6 @@ export default {
 .header-container {
   height: .88rem;
   position: relative;
-  z-index: 99999;
+  z-index: 99;
 }
 </style>
