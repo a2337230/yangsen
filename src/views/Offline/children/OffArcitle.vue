@@ -27,7 +27,7 @@
       <ul class="domain" v-show="!isInput">
         <li class="domain-item dis-num" @click="submitLike">
           <span class="dis-amount">{{likeNum}}</span>
-            <img :src="isZan ? yesZan : noZan" alt="">
+          <img :src="isZan ? yesZan : noZan" alt="">
         </li>
         <li class="domain-item dis-num" @click="onDialog">
           <span class="dis-amount">
