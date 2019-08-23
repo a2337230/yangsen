@@ -24,7 +24,7 @@ export default {
     goBack () {
       let url = this.$route.fullPath
       if (url === '/tengfei') {
-
+        window.location.href = 'https://m.xlxt.net'
       } else if (url === '/leader' || url === '/online' || url === '/offline' || url === '/resale' || url === '/study' || url === '/trade') {
         this.$router.push('/tengfei')
       } 

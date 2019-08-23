@@ -55,10 +55,10 @@
       </div>
       <div class="person pd30" style="padding-bottom: 0">
         <h2 class="home-title">线下赋能巡讲会集锦 <router-link tag="span" to="/offline">更多</router-link></h2>
-        <ul class="patrol-menu">
+        <ul class="patrol-menu"  v-if="offArr.length > 0">
           <li class="patrol-list isimg" v-for="item in offArr" :key="item.ArticleID" @click="goOffArcitle(item.ArticleID)">
             <div class="prtrol-img">
-              <img :src="'https://img.xlxt.net' + item.PreviewUrl" alt="">
+              <img :src="'https://img.xlxt.net/' + item.PreviewUrl" alt="">
             </div>
             <p>{{item.Title | titleFormat}}<span>{{item.AddTime | timeFormat}}</span></p>
           </li>
@@ -66,7 +66,7 @@
       </div>
       <div class="person pd30" style="padding-bottom: .38rem">
         <h2 class="home-title">零售峰会点亮行动 <router-link tag="span" to="/resale">更多</router-link></h2>
-        <ul class="retail-menu">
+        <ul class="retail-menu"  v-if="resaleArr.length > 0">
           <li class="retail-list" v-for="item in resaleArr" :key="item.ArticleID" @click="goResaleArcitle(item.ArticleID)">
             <div class="img-left">
               <img :src="'https://img.xlxt.net' + item.PreviewUrl" alt="">
@@ -168,7 +168,9 @@ export default {
     async resaleArc () {
       let result = await retailArticle()
       let data = result.Data
-      data.length = 2
+      if (data.length > 2) {
+        data.length = 2
+      }
       this.resaleArr = data
     },
 
@@ -202,13 +204,11 @@ export default {
     goTop (id) {
       this.lookId = id
       let psd = localStorage.getItem('isPsd')
-      console.log(psd)
       if (psd) {
-        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?from=index&product_id=' + this.lookId +'&returnUrl=' + window.location.href
       } else {
         this.pasTop()
       }
-      
       // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${id}&returnUrl=${window.location.href}`
     },
     pasTop () {
@@ -222,7 +222,7 @@ export default {
       if (this.psd.toLocaleLowerCase() === 'tfzx') {
         localStorage.setItem('isPsd', '1')
         this.isDialog = false
-        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?from=index&product_id=' + this.lookId +'&returnUrl=' + window.location.href
         // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
       } else {
         this.isShow = true
@@ -323,6 +323,7 @@ export default {
         width: 100%;
         height: 2rem;
         overflow: hidden;
+        border-radius: .2rem;
       }
       img {
         width: 100%;

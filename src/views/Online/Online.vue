@@ -30,6 +30,8 @@
 <script>
 import HeaderBox from '@/components/Header'
 import { shopArticle } from '@/api/index'
+import util from '@/utils/util.js'
+import { MessageBox } from 'mint-ui';
 export default {
   name: 'online',
   data () {
@@ -57,40 +59,7 @@ export default {
           checked: false
         }
       ],
-      onlineList: [
-        {
-          img: require('./../../common/images/w1.jpg'),
-          title: '大娃火辣直播'
-        },
-        {
-          img: require('./../../common/images/w2.jpg'),
-          title: '二娃劲爆直播'
-        },
-        {
-          img: require('./../../common/images/w3.jpg'),
-          title: '三娃妩媚直播'
-        },
-        {
-          img: require('./../../common/images/w2.jpg'),
-          title: '四娃妖艳直播'
-        },
-        {
-          img: require('./../../common/images/w5.jpg'),
-          title: '五娃柔情直播'
-        },
-        {
-          img: require('./../../common/images/w6.jpg'),
-          title: '六娃吃货直播'
-        },
-        {
-          img: require('./../../common/images/w7.jpg'),
-          title: '七娃游戏直播'
-        },
-        {
-          img: require('./../../common/images/avatar.jpg'),
-          title: '小新卖萌直播'
-        }
-      ],
+      onlineList: [],
       // 鼠标按下
       flags: false,
       startX: 0,
@@ -102,6 +71,10 @@ export default {
       lookId: 0,
       psd: ''
     }
+  },
+  created () {
+    // this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
+    this.user = '2d001adc288acf01f432a157ec482dc7'
   },
   mounted () {
     let menu = document.querySelector('.tab-menu')
@@ -192,11 +165,25 @@ export default {
       // }
     },
     goCourse (val) {
-      this.lookId = val.CourseID
+      if (!this.user) {
+        MessageBox({
+          title: '提示',
+          message: '登录后可以观看课程',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: '登陆'
+        }).then(action => {
+          if (action === 'confirm') {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + this.isHref
+          }
+        })
+        return 
+      }
+      this.lookId = val.CourseID 
       let psd = localStorage.getItem('isPsd')
       // console.log(psd)
       if (psd) {
-        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
       } else {
         this.pasTop()
       }
@@ -225,7 +212,7 @@ export default {
       if (this.psd.toLocaleLowerCase() === 'tfzx') {
         localStorage.setItem('isPsd', '1')
         this.isDialog = false
-        window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=' + this.lookId +'&isEnterpriseC=1&returnUrl=' + window.location.href
+        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?from=index&product_id=' + this.lookId +'&returnUrl=' + window.location.href
         // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
       } else {
         this.isShow = true

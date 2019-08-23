@@ -35,4 +35,6 @@ input::-webkit-input-placeholder {
   line-height: .5rem;
   /* text-indent: 2em; */
   margin-bottom: .5rem;
+  /* font-weight: lighter; */
+  /* transform: scale(1.3) */
 }

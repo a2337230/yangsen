@@ -230,11 +230,9 @@ export default {
     let path = this.$route.query.path
     let type = this.$route.query.type
     let source = this.$route.query.source
-    console.log(this.$route.query.path)
     if (path === 'offline' || path === 'resale' || type === 'off') {
       this.isDialog = false
     }
-    console.log(path)
     if (path === 'resale' || path==="study" || path === 'trade' || source === 'resale') {
       this.isVideo = false
     }
@@ -265,7 +263,6 @@ export default {
       this.isH5 = true
     }
     this.getArt()
-    // console.log(window.location.href)
   },
   methods: {
     submitPsd () {
@@ -329,7 +326,6 @@ export default {
     },
     // 获取文章详情
     getArt () {
-      console.log(this.user)
       if (this.user) {
         this.getArcitle1()
       } else {
@@ -346,7 +342,6 @@ export default {
       this.time = result.Data.AddTime
       this.isZan = result.Data.IsLike
       this.likeNum = result.Data.ArticleLikeNum
-      console.log(result.Data)
       this.Author = result.Data.Author ? result.Data.Author : '杏林学堂'
       this._getReviewNum()
     },
@@ -444,6 +439,11 @@ export default {
         this.isInput = false
         return
       }
+      if (this.discuss1.length > 1000) {
+        Toast('评价不能超过1000个字')
+        this.isInput = false
+        return
+      }
       // 设定评论间隔
       if (this.isRiew) {
         this.isRiew = false
@@ -479,6 +479,11 @@ export default {
     async reviewSubmit () {
       if (!this.discuss2) {
         Toast('请输入评价内容')
+        return
+      }
+      if (this.discuss1.length > 1000) {
+        Toast('评价不能超过1000个字')
+        this.isInput = false
         return
       }
       if (this.isReply) {

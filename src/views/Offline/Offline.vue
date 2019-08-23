@@ -4,7 +4,7 @@
     <div class="off-join">
       <ul class="off-menu" v-if="offList.length > 0">
         <li v-for="item in offList" :key="item.time" @click="goArcitle(item.ArticleID)">
-          <img :src="item.PreviewUrl.includes('ArticleManage') ? 'https://img.xlxt.net/' + item.PreviewUrl : defaultImg" alt="">
+          <img :src="'https://img.xlxt.net/' + item.PreviewUrl" alt="">
           <p>{{item.Title | titleFormat}} <span>{{item.AddTime | timeFormat}}</span></p>
         </li>
       </ul>
