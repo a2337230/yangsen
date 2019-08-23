@@ -73,7 +73,7 @@
             </div>
             <div class="right-des">
               <h3>{{item.Title}}</h3>
-              <p>{{item.Intro | resTitleFormat}}</p>
+              <p>{{item.Intro}}</p>
             </div>
           </li>
         </ul>
@@ -257,8 +257,8 @@ export default {
       return moment(Number(time)).format('YYYY-MM-DD')
     },
     titleFormat (val) {
-      if (val.length > 15) {
-        return val.substring(0, 15) + '...'
+      if (val.length > 18) {
+        return val.substring(0, 18) + '...'
       }
       return val
     },
@@ -386,11 +386,20 @@ export default {
           margin-bottom: .3rem;
           font-weight: 500;
           color: #333;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          // width: 250px;
         }
         p {
           font-size: .26rem;
           color: #999;
-          padding-bottom: .2rem;
+          // padding-bottom: .2rem;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          overflow: hidden;
         }
       }
     }

@@ -9,7 +9,7 @@
           </div>
           <div class="right-des"> 
             <h3>{{item.Title}}</h3>
-            <p>{{item.Intro | desFormat}}</p>
+            <p>{{item.Intro}}</p>
           </div>
         </li>
       </ul>
@@ -91,11 +91,18 @@ export default {
       margin-bottom: .3rem;
       font-weight: 500;
       color: #333;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
     }
     p {
       font-size: .26rem;
       color: #999;
-      padding-bottom: .2rem;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
     }
   }
 }

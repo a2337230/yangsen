@@ -51,8 +51,8 @@ export default {
       return moment(Number(time)).format('YYYY-MM-DD')
     },
     titleFormat (val) {
-      if (val.length > 15) {
-        return val.substring(0, 15) + '...'
+      if (val.length > 18) {
+        return val.substring(0, 18) + '...'
       }
       return val
     }
