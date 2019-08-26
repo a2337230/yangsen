@@ -17,12 +17,12 @@
         </li>
       </ul>
     </div>
-    <div class="psd-dialog" v-if="isDialog">
+    <div class="psd-dialog" v-if="isDialog" @click="isFocus">
       <div class="psd-box">
         <i class="close" @click="outBack"></i>
         <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd">
         <p class="dialog" :class="{isShow: isShow}">密码错误</p>
-        <button class="submit-btn" @click="submitPsd">确定</button>
+        <div class="submit-btn" @click="submitPsd">确定</div>
       </div>
     </div>
   </div>
@@ -69,14 +69,28 @@ export default {
       isDialog: false,
       isShow: false,
       lookId: 0,
-      psd: ''
+      psd: '',
+      isH5: false,
+      isAndroid: false,
+      isIos: false
     }
   },
   created () {
-    // this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
-    this.user = '2d001adc288acf01f432a157ec482dc7'
+    this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
+    // this.user = '2d001adc288acf01f432a157ec482dc7'
   },
   mounted () {
+    var ua = navigator.userAgent.toLowerCase();
+    // alert(ua)
+    let ios = ua.indexOf("native_app_ios") > -1
+    let android = ua.indexOf("glaer-android") > -1
+    if (ios) {
+      this.isIos = true
+    } else if (android) {
+      this.isAndroid = true
+    } else {
+      this.isH5 = true
+    }
     let menu = document.querySelector('.tab-menu')
     let list = menu.querySelectorAll('li')
     let width = 0
@@ -91,6 +105,10 @@ export default {
     this._shopArticle(511)
   },
   methods: {
+    isFocus () {
+      // let input = document.querySelector('.psd-input')
+      // input.focus()
+    },
     tabClick (index) {
       this.tabs = index
       this.tabList.forEach((item,zindex) => {
@@ -165,25 +183,44 @@ export default {
       // }
     },
     goCourse (val) {
-      if (!this.user) {
-        MessageBox({
-          title: '提示',
-          message: '登录后可以观看课程',
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonText: '登陆'
-        }).then(action => {
-          if (action === 'confirm') {
-            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
-          }
-        })
-        return 
+      // alert(this.isH5)
+      if (this.isH5) {
+        if (!this.user) {
+          MessageBox({
+            title: '提示',
+            message: '登录后可以观看课程',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: '登陆'
+          }).then(action => {
+            if (action === 'confirm') {
+              window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+            }
+          })
+          return 
+        }
       }
+      
       this.lookId = val.CourseID 
       let psd = localStorage.getItem('isPsd')
-      // console.log(psd)
+      // alert(psd)
       if (psd) {
-        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        var ua = navigator.userAgent.toLowerCase();
+        let ios = ua.indexOf("native_app_ios") > -1
+        let android = ua.indexOf("glaer-android") > -1
+        if(ios) {
+           if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+            window.goCourseDetailsPage(this.lookId) 
+          }
+        }else if (android) {
+          // alert(111)
+           window.android.goCourseDetailsPage(this.lookId)
+        } else {
+          window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        }
+        // window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
       } else {
         this.pasTop()
       }
@@ -202,6 +239,7 @@ export default {
       this.onlineList = result.Data
     },
     pasTop () {
+      this.isShow = false
       this.isDialog = true
       setTimeout(() => {
         let psd = document.querySelector('.psd-box')
@@ -209,10 +247,31 @@ export default {
       }, 200)
     },
     submitPsd () {
-      if (this.psd.toLocaleLowerCase() === 'tfzx') {
+      let input = document.querySelector('.psd-input')
+      input.focus()
+      let data = this.psd.replace(/\s/g,"")
+      // alert(data.length)
+      if (data == 'tfzx') {
         localStorage.setItem('isPsd', '1')
+        // let psd = localStorage.getItem('isPsd')
+      // alert(psd)
         this.isDialog = false
-        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        var ua = navigator.userAgent.toLowerCase();
+        let ios = ua.indexOf("native_app_ios") > -1
+        let android = ua.indexOf("glaer-android") > -1
+        if(ios) {
+           if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+            window.goCourseDetailsPage(this.lookId) 
+          }
+        }else if (android) {
+          // alert(111)
+           window.android.goCourseDetailsPage(this.lookId)
+        } else {
+          window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        }
+        
         // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
       } else {
         this.isShow = true
@@ -289,17 +348,17 @@ export default {
   justify-content: space-between;
   li {
     width: 3.3rem;
-    height: 4rem;
+    // height: 4rem;
     border-radius: .2rem;
     box-shadow:0 .02rem .2rem 0 rgba(0,0,0,0.06);
     margin-bottom: .3rem;
     overflow: hidden;
     img {
       width: 100%;
-      height: 3.31rem;
+      height: 1.6rem;
     }
     p {
-      text-align: center;
+      // text-align: center;
       font-size: .3rem;
       color:rgba(34,34,34,1);
       line-height: .42rem;
@@ -308,6 +367,7 @@ export default {
       overflow: hidden;
       text-overflow:ellipsis;
       white-space: nowrap;
+      padding-left: .1rem;
     }
   }
 }

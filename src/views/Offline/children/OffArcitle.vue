@@ -2,7 +2,7 @@
   <div class="article-info">
     <header-nav :title="title"></header-nav>
     <!-- 正文内容 -->
-    <scroll class="container" @click="closeInput" :noMore="true" :pullup="false" v-if="articleTitle">
+    <div class="container" @click="closeInput" v-if="articleTitle">
       <div class="arcitle-video" @click="goCourse" v-if="isVideo">
         <img src="./../../../common/images/videobg.jpg" alt="">
         <i class="video-btn"></i>
@@ -16,7 +16,7 @@
       <div v-html="content" @click="closeInput">
         <!-- 文章内容 -->
       </div>
-    </scroll>
+    </div>
     <!-- 评论 -->
     <div class="discuss">
       <div class="input" :class="{longInput: isInput}">
@@ -207,6 +207,8 @@ export default {
       revUpload: String(new Date()),
       // 判断是否为H5
       isH5: false,
+      isIos: false,
+      isAndroid: false,
       // 复制链接地址
       isHref: '',
       clientH: document.body.clientHeight,
@@ -256,9 +258,9 @@ export default {
     let ios = ua.indexOf("native_app_ios") > -1
     let android = ua.indexOf("glaer-android") > -1
     if (ios) {
-      this.isH5 = false
+      this.isIos = true
     } else if (android) {
-      this.isH5 = false
+      this.isAndroid = true
     } else {
       this.isH5 = true
     }
@@ -278,7 +280,39 @@ export default {
     },
     // 跳转课程
     goCourse () {
-      window.location.href = 'https://m2.xlxt.net/product/Course_Player.html?product_id=9653&isEnterpriseC=1&returnUrl=' + this.isHref
+      var ua = navigator.userAgent.toLowerCase();
+      let ios = ua.indexOf("native_app_ios") > -1
+      let android = ua.indexOf("glaer-android") > -1
+      if (this.isH5) {
+        if (!this.user) {
+          MessageBox({
+            title: '提示',
+            message: '登录后可以观看课程',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: '登陆'
+          }).then(action => {
+            if (action === 'confirm') {
+              window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + this.isHref
+            }
+          })
+          return 
+        }
+      }
+      
+      
+      if(ios) {
+         if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+            window.goCourseDetailsPage('9653') 
+          }
+      }else if (android) {
+        // alert(111)
+         window.android.goCourseDetailsPage('9653')
+      } else {
+        window.location.href = 'https://m.xlxt.net/product/Course_Player.html?product_id=9653&isEnterpriseC=1&returnUrl=' + this.isHref
+      }
     },
     upDateRev () {
       this.discuss2 = '',
@@ -430,6 +464,7 @@ export default {
         _this.reviewBtn = '发送'
         _this.noMore = false
         $('.dis-dialog').hide()
+        _this._getReviewNum()
       })
     },
     // 发表评论
@@ -747,9 +782,10 @@ export default {
 }
 .container {
   // margin-top: .88rem;
-  padding: 0rem .3rem 1.3rem;
+  padding: 0rem .3rem 0rem;
   height: calc(~"100% - 1.98rem");
   box-sizing: border-box;
+  overflow-y: scroll;
   .arcitle-video {
     height: 2.6rem;
     position: relative;

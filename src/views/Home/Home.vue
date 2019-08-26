@@ -99,7 +99,7 @@
         <i class="close" @click="outBack"></i>
         <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd">
         <p class="dialog" :class="{isShow: isShow}">密码错误</p>
-        <button class="submit-btn" @click="submitPsd">确定</button>
+        <button class="submit-btn" @click="submitPsd" @mouseenter="submitPsd">确定</button>
       </div>
     </div>
   </div>
@@ -144,7 +144,10 @@ export default {
       isShow: false,
       lookId: 0,
       psd: '',
-      user: ''
+      user: '',
+      isH5: false,
+      isAndroid: false,
+      isIos: false
     }
   },
   created () {
@@ -156,6 +159,17 @@ export default {
     // this.user = '2d001adc288acf01f432a157ec482dc7'
   },
   mounted() {
+    var ua = navigator.userAgent.toLowerCase();
+    // alert(ua)
+    let ios = ua.indexOf("native_app_ios") > -1
+    let android = ua.indexOf("glaer-android") > -1
+    if (ios) {
+      this.isIos = true
+    } else if (android) {
+      this.isAndroid = true
+    } else {
+      this.isH5 = true
+    }
     this.offArc()
     this.resaleArc()
   },
@@ -207,24 +221,42 @@ export default {
       })
     },
     goTop (id) {
-      if (!this.user) {
-        MessageBox({
-          title: '提示',
-          message: '登录后可以观看课程',
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonText: '登陆'
-        }).then(action => {
-          if (action === 'confirm') {
-            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
-          }
-        })
-        return 
+      if (this.isH5) {
+        if (!this.user) {
+          MessageBox({
+            title: '提示',
+            message: '登录后可以观看课程',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: '登陆'
+          }).then(action => {
+            if (action === 'confirm') {
+              window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+            }
+          })
+          return 
+        }
       }
+      
       this.lookId = id
       let psd = localStorage.getItem('isPsd')
       if (psd) {
-        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        var ua = navigator.userAgent.toLowerCase();
+        let ios = ua.indexOf("native_app_ios") > -1
+        let android = ua.indexOf("glaer-android") > -1
+        if(ios) {
+          if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+            window.goCourseDetailsPage(this.lookId) 
+          }
+        }else if (android) {
+          // alert(111)
+           window.android.goCourseDetailsPage(this.lookId)
+        } else {
+          window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        }
+        // window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
       } else {
         this.pasTop()
       }
@@ -238,10 +270,27 @@ export default {
       }, 200)
     },
     submitPsd () {
-      if (this.psd.toLocaleLowerCase() === 'tfzx') {
+      let input = document.querySelector('.psd-input')
+      input.focus()
+      let data = this.psd.replace(/\s/g,"")
+      if (data === 'tfzx') {
         localStorage.setItem('isPsd', '1')
         this.isDialog = false
-        window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        var ua = navigator.userAgent.toLowerCase();
+        let ios = ua.indexOf("native_app_ios") > -1
+        let android = ua.indexOf("glaer-android") > -1
+        if(ios) {
+           window.goCourseDetailsPage(this.lookId)
+        }else if (android) {
+          if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+            window.goCourseDetailsPage(this.lookId) 
+          }
+        } else {
+          window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
+        }
+        // window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
         // window.location.href = `https://m.xlxt.net/Product/ProductDetail.html?product_id=${this.lookId}&returnUrl=${window.location.href}`
       } else {
         this.isShow = true
