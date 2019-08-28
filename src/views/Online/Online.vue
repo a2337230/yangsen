@@ -2,12 +2,16 @@
   <div class="online">
     <header-box :title="title"></header-box>
     <div class="tabs">
-      <ul class="tab-menu" @mousedown="down" @touchstart="down" @touchmove="move">
+      <div class="tab-menu">
+        <span :class="{current: item.checked}" v-for="item in tabList" :key="item.title" @click="tabClick(item.id)">{{item.title}}</span>
+        <div class="tab-line"></div>
+      </div>
+      <!-- <ul class="tab-menu" @mousedown="down" @touchstart="down" @touchmove="move">
         <li :class="{current: item.checked}" v-for="(item, index) in tabList" :key="item.title" @click="tabClick(index)">
           {{item.title}}
         </li>
-      </ul>
-      <div class="tab-line"></div>
+      </ul> -->
+      
     </div>
     <div class="online-container" style="padding: 0 .3rem;">
       <ul class="online-menu">
@@ -39,24 +43,34 @@ export default {
       title: '线上管理赋能课程专区',
       tabList: [
         {
+          id: 0,
           title: '店长/储备店长',
-          checked: true
+          checked: true,
+          courseID: 511
         },
         {
+          id: 1,
           title: '运营经理',
-          checked: false
+          checked: false,
+          courseID: 512
         },
         {
+          id: 2,
           title: 'HR',
-          checked: false
+          checked: false,
+          courseID: 513
         },
         {
+          id: 3,
           title: '采购/商品经理',
-          checked: false
+          checked: false,
+          courseID: 514
         },
         {
+          id: 4,
           title: '热点',
-          checked: false
+          checked: false,
+          courseID: 515
         }
       ],
       onlineList: [],
@@ -91,17 +105,23 @@ export default {
     } else {
       this.isH5 = true
     }
-    let menu = document.querySelector('.tab-menu')
-    let list = menu.querySelectorAll('li')
-    let width = 0
-    let l = 0
-    let md = list[1].offsetLeft - list[0].offsetWidth - list[0].offsetLeft
-    list.forEach(item => {
-      width += item.clientWidth
+    // 计算选项卡宽度
+    let tabs = document.querySelector('.tab-menu')
+    let tabItem = tabs.querySelectorAll('span')
+    let mg = tabItem[1].offsetLeft - tabItem[0].offsetWidth
+    let w = 0
+    tabItem.forEach(item => {
+      w += item.offsetWidth
     })
-    let line = document.querySelector('.tab-line')
-    line.style.transform = `translate(${list[0].offsetWidth / 2 - 15}px)`
-    menu.style.width = width + md * 4 + 5 + 'px'
+    tabs.style.width = w + mg * 5 + 10 + 'px'
+    let tabID = localStorage.getItem('tabs')
+
+    if (tabID) {
+      this.tabs = Number(tabID)
+      this.tabClick(tabID)
+      this._shopArticle(this.tabList[tabID].courseID)
+      return
+    }
     this._shopArticle(511)
   },
   methods: {
@@ -111,76 +131,18 @@ export default {
     },
     tabClick (index) {
       this.tabs = index
-      this.tabList.forEach((item,zindex) => {
-        if (zindex === index) {
+      localStorage.setItem('tabs', index)
+      this.tabList.forEach(item => {
+        if (item.id === index) {
           item.checked = true
-          let l = document.querySelectorAll('.tab-menu li')[0].offsetLeft
-          let ll = document.querySelector('.tabs').offsetLeft
-          let tabItem = document.querySelectorAll('.tab-menu li')[index]
-          let w = tabItem.offsetWidth
-          let line = document.querySelector('.tab-line')
-          let domW = document.documentElement.offsetWidth
-          let patentBox = document.querySelector('.tab-menu')
-          let toLeft = 0
-          if (patentBox.clientWidth > domW) {
-            if (index > 1) {
-              patentBox.style.transform = `translateX(-${patentBox.clientWidth - domW + ll}px)`
-              //  patentBox.style.height = '1000px'
-              toLeft = (patentBox.clientWidth - domW) * -1 
-            } else {
-              toLeft = 0
-              patentBox.style.transform = `translateX(0px)`
-            }
-          }
-          if (line.offsetWidth > w) {
-            line.style.width = w + 'px'
-            line.style.transform = `translateX(${tabItem.offsetLeft + toLeft - ll}px)`
-          } else {
-            line.style.width = '.6rem'
-            if (index < 2) {
-              line.style.transform = `translateX(${tabItem.offsetLeft + w/2 - line.offsetWidth/2 + toLeft}px)`
-              this.lineX = tabItem.offsetLeft + w/2 - line.offsetWidth/2 + toLeft
-            } else {
-              line.style.transform = `translateX(${tabItem.offsetLeft - ll + w/2 - line.offsetWidth/2 + toLeft}px)`
-              this.lineX = tabItem.offsetLeft - ll + w/2 - line.offsetWidth/2 + toLeft
-            }
-          }
         } else {
           item.checked = false
         }
       })
-    },
-    down (e) {
-      this.flags = true
-      var touch;
-      if(e.touches){
-          touch = e.touches[0];
-      }else {
-          touch = e;
-      }
-      this.startX = touch.clientX
-    },
-    move (e) {
-      // if (this.flags) {
-      //   var touch;
-      //   let move = 0
-      //   if(e.touches){
-      //       touch = e.touches[0];
-      //   }else {
-      //       touch = e;
-      //   }
-      //   move = touch.clientX - this.startX
-      //   let menu = document.querySelector('.tab-menu')
-      //   if (move > 10) {
-      //     console.log('you')
-      //   }
-      //   if (move < -10) {
-      //     console.log('z')
-      //   }
-      //   menu.style.transform = `translateX(${move}px)`
-      //   console.log(move)
-      //   // console.log(touch.clientX, this.startX)
-      // }
+      let tabItem = document.querySelectorAll('span')[index]
+      let line = document.querySelector('.tab-line')
+      line.style.width = tabItem.offsetWidth + 'px'
+      line.style.left = tabItem.offsetLeft + 'px'
     },
     goCourse (val) {
       // alert(this.isH5)
@@ -286,12 +248,14 @@ export default {
       if (val === 0) {
         this._shopArticle(511)
       } else if (val === 1) {
-        this._shopArticle(515)
+        // alert(2)
+        this._shopArticle(512)
       } else if (val === 2) {
         this._shopArticle(513)
       } else if (val === 3) {
         this._shopArticle(514)
-      } else {
+      } else if (val === 4){
+        // alert(1)
         this._shopArticle(515)
       }
     }
@@ -313,11 +277,15 @@ export default {
   box-sizing: border-box;
   // overflow: hidden;
   position: relative;
+  overflow-x: scroll;
   .tab-menu {
     width: 500rem;
     display: flex;
     transition: .5s;
-    li {
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+    position: relative;
+    span {
       margin-right: .3rem;
       font-size: .3rem .42rem;
       color: #999;
@@ -330,16 +298,26 @@ export default {
     }
   }
   .tab-line {
-    margin-top: .13rem;
-    width: .6rem;
-    height: .04rem;
-    background-color: #000;
-    border-radius: .08rem;
-    border:1px solid rgba(151,151,151,1);
-    transition: .2s;
     position: absolute;
     left: 0;
-    bottom: -.2rem;
+    bottom: 0;
+    width: 2rem;
+    height: .08rem;
+    // background-color: #000;
+    border-radius: .2rem;
+    transition: .3s;
+    // position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    &::after {
+      content: '';
+      position: absolute;
+      width: .6rem;
+      height: 100%;
+      border-radius: .2rem;
+      background-color: #000;
+    }
   }
 }
 .online-menu {

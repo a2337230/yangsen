@@ -1,6 +1,6 @@
 import ajax from './ajax'
-const BASE_URL = 'https://www.xlxt.net'
-// const BASE_URL = ''
+// const BASE_URL = 'https://www.xlxt.net'
+const BASE_URL = ''
 // ------------------------------------------------------------------------
 // 行业报告
 export const tradeArticle = () => ajax(BASE_URL + '/Article/GetArticleShow?Keyword=&ClassifyID=32&Pagesize=15&Pageindex=1&IsRecommend=0')

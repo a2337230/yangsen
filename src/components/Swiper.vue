@@ -1,28 +1,11 @@
 <template>
   <swiper :options="swiperOption" ref="mySwiper" class="swiper">
     <!-- slides -->
-    <swiper-slide v-for="item in imgs" :key="item.img">
+    <swiper-slide v-for="item in imgs" :key="item.img" style="width: 100%">
         <div class="swiper-item">
           <img :src="item.img" alt="">
         </div>
     </swiper-slide>
-    <!-- <swiper-slide>
-      <div class="swiper-item">
-        <img src="./../common/images/lunbo.png" alt="">
-      </div>
-    </swiper-slide>
-    <swiper-slide>
-      <div class="swiper-item">
-        <img src="./../common/images/lunbo.png" alt="">
-      </div>
-    </swiper-slide>
-    <swiper-slide>
-      <div class="swiper-item">
-        <img src="./../common/images/lunbo.png" alt="">
-      </div>
-    </swiper-slide> -->
-    
-    <!-- Optional controls以下按需使用 -->
     <div class="swiper-pagination"  slot="pagination"></div>	<!--分页-->
   </swiper> 
 </template>
@@ -65,6 +48,14 @@ export default {
         pagination: {
           el: '.swiper-pagination',
           clickable :true
+        },
+        observer:true,
+        observeParents:true,
+        on: {
+          resize: function(){
+            this.params.width = window.innerWidth;
+            this.update();
+          },
         }
       }
       
@@ -89,7 +80,11 @@ export default {
   height: 5px;
 }
 .swiper-item {
-  width: 100%;
+  width: calc(~"100vw - 0.6rem");
+  // padding: .2rem;
+  // box-sizing: border-box;
+  // border-radius: .2rem;
+  // overflow: hidden;
   img {
     width: 100%;
   }

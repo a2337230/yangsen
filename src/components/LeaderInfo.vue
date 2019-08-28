@@ -72,9 +72,11 @@ export default {
             var userAgent = navigator.userAgent
             // 判断华为手机
             let huawei = navigator.appVersion.toLowerCase()
-            // alert(huawei.includes('huawei'))
             var isiOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-            
+            let btn = document.querySelector('.prism-big-play-btn')
+            btn.style.left = '50%'
+            btn.style.marginLeft = '-31px'
+            btn.style.bottom = '40%'
             if(isiOS || huawei.includes('huawei')) {
               $("#J_prismPlayer").find(".prism-fullscreen-btn").css('display',  'none')
             }

@@ -328,6 +328,7 @@ export default {
       // alert(isiOS)
       if (isiOS) {
         window.scrollTo(0, 0)
+        // this.closeInput()
       }
       // if (isiOS && !ios) {
       //   alert(1)
@@ -786,6 +787,7 @@ export default {
   height: calc(~"100% - 1.98rem");
   box-sizing: border-box;
   overflow-y: scroll;
+  overflow-x: hidden;
   .arcitle-video {
     height: 2.6rem;
     position: relative;

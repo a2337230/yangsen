@@ -159,6 +159,7 @@ export default {
     // this.user = '2d001adc288acf01f432a157ec482dc7'
   },
   mounted() {
+    localStorage.removeItem('tabs')
     var ua = navigator.userAgent.toLowerCase();
     // alert(ua)
     let ios = ua.indexOf("native_app_ios") > -1
