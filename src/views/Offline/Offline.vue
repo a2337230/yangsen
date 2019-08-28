@@ -22,7 +22,7 @@ export default {
   name: 'offline',
   data () {
     return {
-      title: '线下管理赋能巡讲会集锦',
+      title: '线下赋能巡讲会集锦',
       defaultImg: require('./../../common/images/banner01.jpg'),
       offList: []
     }

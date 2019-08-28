@@ -1,6 +1,6 @@
 <template>
   <div class="leader-info">
-    <header-box :title="title"></header-box>
+    <header-box :title="title" style="zIndex: 999999"></header-box>
     <div class="leader-video">
       <div class="prism-player" id="J_prismPlayer"></div>
     </div>
@@ -107,7 +107,7 @@ export default {
     line-height: .5rem;
   }
   .content {
-    padding-top: .3rem;
+    // padding-top: .3rem;
     font-size: .36rem;
     color: #222;
   }

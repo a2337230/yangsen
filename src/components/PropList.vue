@@ -8,9 +8,9 @@
         <p class="name">{{item.name}}</p>
         <span>{{item.des}}</span>
       </div>
-      <div class="go-peo">
+      <!-- <div class="go-peo">
         <img src="./../common/images/goright.png" alt="">
-      </div>
+      </div> -->
     </li>
   </ul>
 </template>
@@ -55,7 +55,7 @@ export default {
       }
     }
     .peo-des {
-      margin-left: .38rem;
+      margin-left: .2rem;
       display: flex;
       flex-direction: column;
       .name, span {
@@ -68,6 +68,8 @@ export default {
         margin-bottom: .08rem;
       }
       span {
+        padding-top: .1rem;
+        font-size: .24rem;
         color: #444;
         font-weight: normal;
       }

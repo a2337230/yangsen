@@ -40,7 +40,7 @@ export default {
   name: 'online',
   data () {
     return {
-      title: '线上管理赋能课程专区',
+      title: '线上赋能课程专区',
       tabList: [
         {
           id: 0,

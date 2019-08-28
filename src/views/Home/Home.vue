@@ -130,10 +130,10 @@ export default {
         },
         {
           img: require('./../../common/images/banner03.jpg')
-        },
-        {
-          img: require('./../../common/images/banner04.jpg')
         }
+        // {
+        //   img: require('./../../common/images/banner04.jpg')
+        // }
       ],
       // 人物数据
       popList: [],
@@ -459,6 +459,7 @@ export default {
       img {
         width: 3.3rem;
         height: 1.6rem;
+        border-radius: .2rem;
       }
       p {
         font-size: .3rem;

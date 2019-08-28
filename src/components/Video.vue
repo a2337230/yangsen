@@ -12,7 +12,7 @@ export default {
   props: {
     VideoId: {
       type: String,
-      default: '6548fac1b5ed4bf08eee92ec6eca41c1'
+      default: '8a786cfbeeba418e8e9fcd1a880b1c2e'
     },
     VideoImg: {
       type: String,
@@ -23,11 +23,11 @@ export default {
     return {
       player: '',
       // 默认图片
-      defaultVideoImg: require('./../common/images/banner04.jpg'),
+      defaultVideoImg: require('./../common/images/banner03.jpg'),
       player: '',
       // 兼容IOS
       x5_type: '',
-      cover_img: require('./../common/images/banner04.jpg')
+      cover_img: require('./../common/images/banner03.jpg')
     }
   },
   created () {
