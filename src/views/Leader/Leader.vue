@@ -21,7 +21,6 @@ export default {
   },
   created () {
     this.popList = prople.prople()
-    console.log(prople.prople())
   },
   components: {
     HeaderBox,

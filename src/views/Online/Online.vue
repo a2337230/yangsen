@@ -95,7 +95,6 @@ export default {
   },
   mounted () {
     var ua = navigator.userAgent.toLowerCase();
-    // alert(ua)
     let ios = ua.indexOf("native_app_ios") > -1
     let android = ua.indexOf("glaer-android") > -1
     if (ios) {
@@ -145,7 +144,6 @@ export default {
       line.style.left = tabItem.offsetLeft + 'px'
     },
     goCourse (val) {
-      // alert(this.isH5)
       if (this.isH5) {
         if (!this.user) {
           MessageBox({
@@ -165,7 +163,6 @@ export default {
       
       this.lookId = val.CourseID 
       let psd = localStorage.getItem('isPsd')
-      // alert(psd)
       if (psd) {
         var ua = navigator.userAgent.toLowerCase();
         let ios = ua.indexOf("native_app_ios") > -1
@@ -177,7 +174,6 @@ export default {
             window.goCourseDetailsPage(this.lookId) 
           }
         }else if (android) {
-          // alert(111)
            window.android.goCourseDetailsPage(this.lookId)
         } else {
           window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
@@ -212,11 +208,8 @@ export default {
       let input = document.querySelector('.psd-input')
       input.focus()
       let data = this.psd.replace(/\s/g,"")
-      // alert(data.length)
       if (data == 'tfzx') {
         localStorage.setItem('isPsd', '1')
-        // let psd = localStorage.getItem('isPsd')
-      // alert(psd)
         this.isDialog = false
         var ua = navigator.userAgent.toLowerCase();
         let ios = ua.indexOf("native_app_ios") > -1
@@ -228,7 +221,6 @@ export default {
             window.goCourseDetailsPage(this.lookId) 
           }
         }else if (android) {
-          // alert(111)
            window.android.goCourseDetailsPage(this.lookId)
         } else {
           window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href
@@ -248,14 +240,12 @@ export default {
       if (val === 0) {
         this._shopArticle(511)
       } else if (val === 1) {
-        // alert(2)
         this._shopArticle(512)
       } else if (val === 2) {
         this._shopArticle(513)
       } else if (val === 3) {
         this._shopArticle(514)
       } else if (val === 4){
-        // alert(1)
         this._shopArticle(515)
       }
     }

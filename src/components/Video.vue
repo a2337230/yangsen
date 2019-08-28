@@ -68,12 +68,10 @@ export default {
 
         }, function (player) {
             _this.$emit('codeing')
-          // console.log('播放器创建好了。')
             $("#J_prismPlayer video").attr("poster", _this.cover_img)
             var userAgent = navigator.userAgent
             // 判断华为手机
             let huawei = navigator.appVersion.toLowerCase()
-            // alert(huawei.includes('huawei'))
             var isiOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
             
             if(isiOS || huawei.includes('huawei')) {

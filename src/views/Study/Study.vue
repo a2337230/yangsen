@@ -34,7 +34,6 @@ export default {
     async _studyArticle () {
       let result = await studyArticle()
       this.resaleData = result.Data
-      console.log(result)
     },
     goArcitle (arcitleID) {
       this.$router.push({

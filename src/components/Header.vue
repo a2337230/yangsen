@@ -46,7 +46,6 @@ export default {
   font-size: .36rem;
   font-weight: 700;
   background-color: #fff;
-  // font-family: 'pingfang sc';
   .back {
     position: absolute;
     width: .88rem;

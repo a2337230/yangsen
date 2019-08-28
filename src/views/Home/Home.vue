@@ -119,7 +119,7 @@ export default {
   data () {
     return {
       // 头部
-      title: '活动介绍',
+      title: '腾飞在县',
       // 轮播图数据
       banner: [
         {
@@ -161,7 +161,6 @@ export default {
   mounted() {
     localStorage.removeItem('tabs')
     var ua = navigator.userAgent.toLowerCase();
-    // alert(ua)
     let ios = ua.indexOf("native_app_ios") > -1
     let android = ua.indexOf("glaer-android") > -1
     if (ios) {
@@ -252,7 +251,6 @@ export default {
             window.goCourseDetailsPage(this.lookId) 
           }
         }else if (android) {
-          // alert(111)
            window.android.goCourseDetailsPage(this.lookId)
         } else {
           window.location.href = 'https://m.xlxt.net/Product/Course_Player.html?product_id=' + this.lookId +'&returnUrl=' + window.location.href

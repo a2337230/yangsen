@@ -254,7 +254,6 @@ export default {
     this.isHref = window.location.href
     this._iosInput()
     var ua = navigator.userAgent.toLowerCase();
-    // alert(ua)
     let ios = ua.indexOf("native_app_ios") > -1
     let android = ua.indexOf("glaer-android") > -1
     if (ios) {
@@ -308,7 +307,6 @@ export default {
             window.goCourseDetailsPage('9653') 
           }
       }else if (android) {
-        // alert(111)
          window.android.goCourseDetailsPage('9653')
       } else {
         window.location.href = 'https://m.xlxt.net/product/Course_Player.html?product_id=9653&isEnterpriseC=1&returnUrl=' + this.isHref
@@ -325,13 +323,11 @@ export default {
       let isSari = u.indexOf("Safari") > -1
       let ua = navigator.userAgent.toLowerCase()
       let ios = ua.indexOf("native_app_ios") > -1
-      // alert(isiOS)
       if (isiOS) {
         window.scrollTo(0, 0)
         // this.closeInput()
       }
       // if (isiOS && !ios) {
-      //   alert(1)
       //   this.submitFrom()
       // }
     },
