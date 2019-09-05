@@ -5,7 +5,7 @@
       <ul class="off-menu" v-if="offList.length > 0">
         <li v-for="item in offList" :key="item.time" @click="goArcitle(item.ArticleID)">
           <img :src="'https://img.xlxt.net/' + item.PreviewUrl" alt="">
-          <p>{{item.Title | titleFormat}} <span>{{item.AddTime | timeFormat}}</span></p>
+          <p><span>{{item.Title}}</span> <span>{{item.AddTime | timeFormat}}</span></p>
         </li>
       </ul>
     </div>
@@ -79,19 +79,25 @@ export default {
         height: 2.32rem;
       }
       p {
-        padding: 0 .3rem;
+        padding: 0 .2rem;
         font-size: .3rem;
         color:rgba(34,34,34,1);
-        line-height: .42rem;
-        // font-weight: bold;
         line-height: .7rem;
         box-sizing: border-box;
         position: relative;
+        display: flex;
+        justify-content: space-between;
         span {
-          position: absolute;
-          right: .3rem;
-          font-size: .26rem;
-          line-height: .7rem;
+          &:first-child {
+            font-size: .26rem;
+            width:5rem;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+          }
+          &:last-child {
+            font-size: .26rem;
+          }
         }
       }
     }

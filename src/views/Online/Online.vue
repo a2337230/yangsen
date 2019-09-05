@@ -24,7 +24,7 @@
     <div class="psd-dialog" v-if="isDialog" @click="isFocus">
       <div class="psd-box">
         <i class="close" @click="outBack"></i>
-        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd">
+        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd" autocapitalize="off" autocorrect="off" >
         <p class="dialog" :class="{isShow: isShow}">密码错误</p>
         <div class="submit-btn" @click="submitPsd">确定</div>
       </div>
@@ -90,8 +90,8 @@ export default {
     }
   },
   created () {
-    this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
-    // this.user = '2d001adc288acf01f432a157ec482dc7'
+    // this.user = util.getCookie('UserID') ? util.getCookie('UserID'): util.getCookie('u')
+    this.user = '2d001adc288acf01f432a157ec482dc7'
   },
   mounted () {
     var ua = navigator.userAgent.toLowerCase();
@@ -151,7 +151,7 @@ export default {
             message: '登录后可以观看课程',
             showConfirmButton: true,
             showCancelButton: true,
-            confirmButtonText: '登陆'
+            confirmButtonText: '登录' 
           }).then(action => {
             if (action === 'confirm') {
               window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
@@ -167,7 +167,14 @@ export default {
         var ua = navigator.userAgent.toLowerCase();
         let ios = ua.indexOf("native_app_ios") > -1
         let android = ua.indexOf("glaer-android") > -1
-        if(ios) {
+        let iosWk = ua.indexOf("native_app_ios_wk") > -1
+        if (iosWk) {
+          if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+             window.webkit.messageHandlers.goCourseDetailsPage.postMessage(this.lookId) 
+          }
+        } else if(ios) {
            if (!this.user) {
             window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
           } else {
@@ -190,11 +197,11 @@ export default {
         browseNum:false,
         reviewAvg:false,
         courseClassify:id,
-        pagesize:9,
+        pagesize:900,
         pageindex:1,
         keyword: ''
       })
-      this.onlineList = result.Data
+      this.onlineList = result.Data.reverse()
     },
     pasTop () {
       this.isShow = false
@@ -208,13 +215,22 @@ export default {
       let input = document.querySelector('.psd-input')
       input.focus()
       let data = this.psd.replace(/\s/g,"")
-      if (data == 'tfzx') {
+      console.log(data.toLowerCase(), data.toLowerCase() == 'tfzx')
+      // return
+      if (data.toLowerCase() == 'tfzx') {
         localStorage.setItem('isPsd', '1')
         this.isDialog = false
         var ua = navigator.userAgent.toLowerCase();
         let ios = ua.indexOf("native_app_ios") > -1
         let android = ua.indexOf("glaer-android") > -1
-        if(ios) {
+        let iosWk = ua.indexOf("native_app_ios_wk") > -1
+        if (iosWk) {
+          if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+             window.webkit.messageHandlers.goCourseDetailsPage.postMessage(this.lookId) 
+          }
+        } else if(ios) {
            if (!this.user) {
             window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
           } else {
@@ -248,6 +264,9 @@ export default {
       } else if (val === 4){
         this._shopArticle(515)
       }
+    },
+    psd (val) {
+      this.psd = val.replace(/\s/g,"").toLowerCase()
     }
   },
   components: {

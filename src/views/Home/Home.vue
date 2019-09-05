@@ -35,21 +35,21 @@
         <h2 class="home-title">线上管理赋能课程专区 <router-link tag="span" to="/online">更多</router-link></h2>
         <p>县城TOP客户专享</p>
         <ul class="per-card">
-          <li @click="goTop(723)">
-            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/5/24/73d3a95978ca4cbc9aae524611121235.jpg" alt="">
-            <p>呼吸系统疾病-咳嗽</p>
+          <li @click="goTop(17848)">
+            <img src="https://img.xlxt.net/Course/2019/08/26/156680271100018928.jpg" alt="">
+            <p>制定基于战略的培训规划</p>
           </li>
-          <li @click="goTop(2593)">
-            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/5/16/1f7250fc7149483ebd8a020a543cd9bf.jpg" alt="">
-            <p>温湿度表记录</p>
+          <li @click="goTop(17855)">
+            <img src="https://img.xlxt.net/Course/2019/08/26/156681043200089357.jpg" alt="">
+            <p>门店会员开发与维护-1</p>
           </li>
-          <li @click="goTop(2679)">
-            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/5/29/f001019018ba4de1981f139b05a16b54.jpg" alt="">
-            <p>店面形象与清洁</p>
+          <li @click="goTop(17922)">
+            <img src="https://img.xlxt.net/Course/2019/08/27/15668890460008688.jpg" alt="">
+            <p>门店数据分析与业绩提升技术-1</p>
           </li>
-          <li @click="goTop(2674)">
-            <img src="https://img.xlxt.net/QAupload/LMS/Course_img/2018/7/12/3d51ebf058d3496c8c21a818cc710254.jpg" alt="">
-            <p>中药区铡刀操作</p>
+          <li @click="goTop(17960)">
+            <img src="https://img.xlxt.net/Course/2019/08/28/156695717800071974.jpg" alt="">
+            <p>新员工培训项目设计与评估</p>
           </li>
         </ul>
       </div>
@@ -60,7 +60,7 @@
             <div class="prtrol-img">
               <img :src="'https://img.xlxt.net/' + item.PreviewUrl" alt="">
             </div>
-            <p>{{item.Title | titleFormat}}<span>{{item.AddTime | timeFormat}}</span></p>
+            <p><span>{{item.Title}}</span><span>{{item.AddTime | timeFormat}}</span></p>
           </li>
         </ul>
       </div>
@@ -97,7 +97,7 @@
     <div class="psd-dialog" v-if="isDialog">
       <div class="psd-box">
         <i class="close" @click="outBack"></i>
-        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd">
+        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd" autocapitalize="off" autocorrect="off" >
         <p class="dialog" :class="{isShow: isShow}">密码错误</p>
         <button class="submit-btn" @click="submitPsd" @mouseenter="submitPsd">确定</button>
       </div>
@@ -148,6 +148,11 @@ export default {
       isH5: false,
       isAndroid: false,
       isIos: false
+    }
+  },
+  watch: {
+    psd (val) {
+      this.psd = val.replace(/\s/g,"").toLowerCase()
     }
   },
   created () {
@@ -228,7 +233,7 @@ export default {
             message: '登录后可以观看课程',
             showConfirmButton: true,
             showCancelButton: true,
-            confirmButtonText: '登陆'
+            confirmButtonText: '登录'
           }).then(action => {
             if (action === 'confirm') {
               window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
@@ -244,7 +249,14 @@ export default {
         var ua = navigator.userAgent.toLowerCase();
         let ios = ua.indexOf("native_app_ios") > -1
         let android = ua.indexOf("glaer-android") > -1
-        if(ios) {
+        let iosWk = ua.indexOf("native_app_ios_wk") > -1
+        if (iosWk) {
+          if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+             window.webkit.messageHandlers.goCourseDetailsPage.postMessage(this.lookId) 
+          }
+        } else if(ios) {
           if (!this.user) {
             window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
           } else {
@@ -278,7 +290,14 @@ export default {
         var ua = navigator.userAgent.toLowerCase();
         let ios = ua.indexOf("native_app_ios") > -1
         let android = ua.indexOf("glaer-android") > -1
-        if(ios) {
+        let iosWk = ua.indexOf("native_app_ios_wk") > -1
+        if (iosWk) {
+          if (!this.user) {
+            window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+          } else {
+             window.webkit.messageHandlers.goCourseDetailsPage.postMessage(this.lookId) 
+          }
+        } else if(ios) {
            window.goCourseDetailsPage(this.lookId)
         }else if (android) {
           if (!this.user) {
@@ -380,12 +399,18 @@ export default {
             font-size: .3rem;
             line-height: .42rem;
             padding: .13rem 0;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
           }
         }
       }
     }
     .patrol-menu {
       padding-top: .3rem;
+      li {
+        padding-bottom: .3rem;
+      }
       .prtrol-img {
         width: 100%;
         height: 2rem;
@@ -398,14 +423,30 @@ export default {
         // height: auto;
         border-radius: .2rem;
       }
-      p {
-        padding: .2rem 0;
-        color: #222;
+    p {
+        padding: 0 .2rem;
+        
         font-size: .3rem;
+        line-height: .4rem;
+        padding-top: .1rem;
+        color:rgba(34,34,34,1);
+        // line-height: .7rem;
+        box-sizing: border-box;
         position: relative;
+        display: flex;
+        justify-content: space-between;
         span {
-          position: absolute;
-          right: 0;
+          &:first-child {
+            font-size: .26rem;
+            // width:5rem;
+            // overflow: hidden;
+            // text-overflow:ellipsis;
+            // white-space: nowrap;
+          }
+          &:last-child {
+            font-size: .26rem;
+            display: none;
+          }
         }
       }
     }
@@ -431,7 +472,7 @@ export default {
         h3 {
           font-weight: normal;
           font-size: .3rem;
-          margin-bottom: .3rem;
+          // margin-bottom: .3rem;
           font-weight: 500;
           color: #333;
           display: -webkit-box;

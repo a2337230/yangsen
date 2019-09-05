@@ -16,7 +16,7 @@ export default {
     },
     VideoImg: {
       type: String,
-      default: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566364830889&di=975491540be619ed6950a807b2fcf5f3&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F038bb1e576134a50000018c1bacd997.jpg',
+      default: require('./../common/images/tfVideo.png')
     }
   },
   data () {
@@ -64,7 +64,7 @@ export default {
           qualitySort: true,
           controlBarVisibility:'click',
           showBarTime:3000,//配合click使用
-          cover: _this.VideoImg ? _this.VideoImg : _this.defaultVideoImg,
+          cover: '',
 
         }, function (player) {
             _this.$emit('codeing')
@@ -147,6 +147,7 @@ export default {
  }
 .video-box /deep/ .prism-cover {
   background-size: cover;
+  display: none;
 }
 .video-box /deep/ .prism-player video.center {
   object-position: 50% 50% !important;

@@ -4,7 +4,7 @@
     <!-- 正文内容 -->
     <div class="container" @click="closeInput" v-if="articleTitle">
       <div class="arcitle-video" @click="goCourse" v-if="isVideo">
-        <img src="./../../../common/images/videobg.jpg" alt="">
+        <img :src="bannerImg" alt="">
         <i class="video-btn"></i>
       </div>
       <h2 class="article-title" @click="closeInput">{{articleTitle}}</h2>
@@ -127,7 +127,7 @@
     <div class="psd-dialog" v-if="isDialog">
       <div class="psd-box">
         <i class="close" @click="outBack"></i>
-        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd">
+        <input type="text" class="psd-input" placeholder="请输入密码" v-model="psd" autocapitalize="off" autocorrect="off" >
         <p class="dialog" :class="{isShow: isShow}">密码错误</p>
         <button class="submit-btn" @click="submitPsd">确定</button>
       </div>
@@ -220,7 +220,9 @@ export default {
       psd: '',
       isDialog: true,
       Author: '',
-      isVideo: true
+      isVideo: true,
+      courseId: 0,
+      bannerImg: ''
     }
   },
   created () {
@@ -279,9 +281,14 @@ export default {
     },
     // 跳转课程
     goCourse () {
+      // let CourseId = this.courseId
+      // alert(this.courseId)
+
+      console.log(this.courseId)
       var ua = navigator.userAgent.toLowerCase();
       let ios = ua.indexOf("native_app_ios") > -1
       let android = ua.indexOf("glaer-android") > -1
+      let iosWk = ua.indexOf("native_app_ios_wk") > -1
       if (this.isH5) {
         if (!this.user) {
           MessageBox({
@@ -289,27 +296,33 @@ export default {
             message: '登录后可以观看课程',
             showConfirmButton: true,
             showCancelButton: true,
-            confirmButtonText: '登陆'
+            confirmButtonText: '登录'
           }).then(action => {
             if (action === 'confirm') {
               window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + this.isHref
             }
-          })
+          }) 
           return 
         }
       }
       
-      
-      if(ios) {
+      if (iosWk) {
+        if (!this.user) {
+          window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
+        } else {
+            window.webkit.messageHandlers.goCourseDetailsPage.postMessage(this.lookId) 
+        }
+      } else if(ios) {
          if (!this.user) {
             window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + window.location.href
           } else {
-            window.goCourseDetailsPage('9653') 
+            window.goCourseDetailsPage(this.courseId) 
           }
       }else if (android) {
-         window.android.goCourseDetailsPage('9653')
+        // alert(this.courseId)
+         window.android.goCourseDetailsPage(this.courseId)
       } else {
-        window.location.href = 'https://m.xlxt.net/product/Course_Player.html?product_id=9653&isEnterpriseC=1&returnUrl=' + this.isHref
+        window.location.href = 'https://m.xlxt.net/product/Course_Player.html?product_id='+ this.courseId +'&isEnterpriseC=1&returnUrl=' + this.isHref
       }
     },
     upDateRev () {
@@ -374,6 +387,8 @@ export default {
       this.isZan = result.Data.IsLike
       this.likeNum = result.Data.ArticleLikeNum
       this.Author = result.Data.Author ? result.Data.Author : '杏林学堂'
+      this.courseId = result.Data.Keyword
+      this.bannerImg = 'https://img.xlxt.net' + result.Data.PreviewUrl
       this._getReviewNum()
     },
     async getArcitle2 () {
@@ -387,6 +402,8 @@ export default {
       this.isZan = result.Data.IsLike
       this.likeNum = result.Data.ArticleLikeNum
       this.Author = result.Data.Author ? result.Data.Author : '杏林学堂'
+      this.courseId = result.Data.Keyword
+      this.bannerImg = 'https://img.xlxt.net' + result.Data.PreviewUrl
       // this._getReviewNum()
     },
     // 获取文章评论数
@@ -433,7 +450,7 @@ export default {
           message: '登录后可以评论',
           showConfirmButton: true,
           showCancelButton: true,
-          confirmButtonText: '登陆'
+          confirmButtonText: '登录'
         }).then(action => {
           if (action === 'confirm') {
             window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + this.isHref
@@ -583,7 +600,7 @@ export default {
           message: '登录后可以点赞',
           showConfirmButton: true,
           showCancelButton: true,
-          confirmButtonText: '登陆'
+          confirmButtonText: '登录'
         }).then(action => {
           if (action === 'confirm') {
             window.location.href = 'https://sso.xlxt.net/applogin/login.html?ReturnUrl=' + this.isHref
@@ -761,6 +778,9 @@ export default {
       if (!val) {
         this.discuss1 = ''
       }
+    },
+    psd (val) {
+      this.psd = val.replace(/\s/g,"").toLowerCase()
     }
   },
   components: {
@@ -813,9 +833,10 @@ export default {
     }
   } 
   .article-title {
-    font-size: .5rem;
+    font-size: .38rem;
     line-height: .58rem;
     padding-top: .2rem;
+    // font-weight: normal;
   }
   .article-hit {
     text-align: right;
